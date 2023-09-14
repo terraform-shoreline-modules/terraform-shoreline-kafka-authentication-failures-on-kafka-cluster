@@ -1,0 +1,126 @@
+{
+  "name": "authentication_failure_on_kafka_cluster",
+  "description": "This incident type refers to the detection of repeated authentication failures on a Kafka cluster, which could lead to a CPU spike. This issue may be caused by a variety of factors, such as incorrect credentials, network issues, or security breaches. If left unresolved, it can cause significant disruptions to the system's performance and availability. As a result, it is critical to identify and resolve any authentication failures promptly to prevent further damage to the system.",
+  "params": [
+    {
+      "name": "KAFKA_BROKER_PORT",
+      "value": ""
+    },
+    {
+      "name": "KAFKA_CONFIG_FILE",
+      "value": ""
+    },
+    {
+      "name": "KAFKA_BROKER_IP",
+      "value": ""
+    },
+    {
+      "name": "KAFKA_LOGS",
+      "value": ""
+    },
+    {
+      "name": "KAFKA_BROKER_METRICS_URL",
+      "value": ""
+    },
+    {
+      "name": "ZOOKEEPER_LOGS",
+      "value": ""
+    },
+    {
+      "name": "KAFKA_BROKER_PID",
+      "value": ""
+    },
+    {
+      "name": "HOST_NAME",
+      "value": ""
+    },
+    {
+      "name": "K8S_CLUSTER_NAME",
+      "value": ""
+    },
+    {
+      "name": "NAMESPACE",
+      "value": ""
+    }
+  ],
+  "cells": [
+    {
+      "name": "cell_1",
+      "type": "MARKDOWN",
+      "enabled": true,
+      "content": "## Authentication Failure on Kafka Cluster.\nThis incident type refers to the detection of repeated authentication failures on a Kafka cluster, which could lead to a CPU spike. This issue may be caused by a variety of factors, such as incorrect credentials, network issues, or security breaches. If left unresolved, it can cause significant disruptions to the system's performance and availability. As a result, it is critical to identify and resolve any authentication failures promptly to prevent further damage to the system."
+    },
+    {
+      "name": "cell_2",
+      "type": "MARKDOWN",
+      "enabled": true,
+      "content": "## Check the Kafka logs for authentication failure messages"
+    },
+    {
+      "name": "cell_3",
+      "type": "OP_LANG",
+      "enabled": true,
+      "content": "(host | host_name=$HOST_NAME) union (pod | k8s_cluster_name=$K8S_CLUSTER_NAME | namespace=$NAMESPACE) | `grep -i \"authentication failed\" ${KAFKA_LOGS}`"
+    },
+    {
+      "name": "cell_4",
+      "type": "MARKDOWN",
+      "enabled": true,
+      "content": "## Check the CPU usage of the Kafka broker"
+    },
+    {
+      "name": "cell_5",
+      "type": "OP_LANG",
+      "enabled": true,
+      "content": "(host | host_name=$HOST_NAME) union (pod | k8s_cluster_name=$K8S_CLUSTER_NAME | namespace=$NAMESPACE) | `top -bn1 | grep ${KAFKA_BROKER_PID}`"
+    },
+    {
+      "name": "cell_6",
+      "type": "MARKDOWN",
+      "enabled": true,
+      "content": "## Check the network connectivity to the Kafka cluster"
+    },
+    {
+      "name": "cell_7",
+      "type": "OP_LANG",
+      "enabled": true,
+      "content": "(host | host_name=$HOST_NAME) union (pod | k8s_cluster_name=$K8S_CLUSTER_NAME | namespace=$NAMESPACE) | `nc -vz ${KAFKA_BROKER_IP} ${KAFKA_BROKER_PORT}`"
+    },
+    {
+      "name": "cell_8",
+      "type": "MARKDOWN",
+      "enabled": true,
+      "content": "## Check the Kafka configuration files for any misconfigurations"
+    },
+    {
+      "name": "cell_9",
+      "type": "OP_LANG",
+      "enabled": true,
+      "content": "(host | host_name=$HOST_NAME) union (pod | k8s_cluster_name=$K8S_CLUSTER_NAME | namespace=$NAMESPACE) | `cat ${KAFKA_CONFIG_FILE}`"
+    },
+    {
+      "name": "cell_10",
+      "type": "MARKDOWN",
+      "enabled": true,
+      "content": "## Check the Kafka broker metrics for any anomalies"
+    },
+    {
+      "name": "cell_11",
+      "type": "OP_LANG",
+      "enabled": true,
+      "content": "(host | host_name=$HOST_NAME) union (pod | k8s_cluster_name=$K8S_CLUSTER_NAME | namespace=$NAMESPACE) | `curl -X GET ${KAFKA_BROKER_METRICS_URL}`"
+    },
+    {
+      "name": "cell_12",
+      "type": "MARKDOWN",
+      "enabled": true,
+      "content": "## Check the Kafka ZooKeeper logs for any issues"
+    },
+    {
+      "name": "cell_13",
+      "type": "OP_LANG",
+      "enabled": true,
+      "content": "(host | host_name=$HOST_NAME) union (pod | k8s_cluster_name=$K8S_CLUSTER_NAME | namespace=$NAMESPACE) | `grep -i \"error\" ${ZOOKEEPER_LOGS}`"
+    }
+  ]
+}
