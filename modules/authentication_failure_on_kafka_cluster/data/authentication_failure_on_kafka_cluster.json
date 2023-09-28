@@ -7,19 +7,7 @@
       "value": ""
     },
     {
-      "name": "KAFKA_CONFIG_FILE",
-      "value": ""
-    },
-    {
       "name": "KAFKA_BROKER_IP",
-      "value": ""
-    },
-    {
-      "name": "KAFKA_LOGS",
-      "value": ""
-    },
-    {
-      "name": "KAFKA_BROKER_METRICS_URL",
       "value": ""
     },
     {
@@ -27,7 +15,19 @@
       "value": ""
     },
     {
+      "name": "KAFKA_CONFIG_FILE",
+      "value": ""
+    },
+    {
+      "name": "KAFKA_BROKER_METRICS_URL",
+      "value": ""
+    },
+    {
       "name": "KAFKA_BROKER_PID",
+      "value": ""
+    },
+    {
+      "name": "KAFKA_LOGS",
       "value": ""
     },
     {
