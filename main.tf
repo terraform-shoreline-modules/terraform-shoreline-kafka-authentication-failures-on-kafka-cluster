@@ -14,8 +14,8 @@ provider "shoreline" {
   debug = true
 }
 
-module "authentication_failure_on_kafka_cluster" {
-  source    = "./modules/authentication_failure_on_kafka_cluster"
+module "authentication_failure_in_kafka_cluster_with_sasl_ssl_protocol" {
+  source    = "./modules/authentication_failure_in_kafka_cluster_with_sasl_ssl_protocol"
 
   providers = {
     shoreline = shoreline

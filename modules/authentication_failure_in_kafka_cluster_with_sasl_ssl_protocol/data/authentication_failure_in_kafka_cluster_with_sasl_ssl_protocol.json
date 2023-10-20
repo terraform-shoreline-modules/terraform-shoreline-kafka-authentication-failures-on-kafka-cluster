@@ -1,0 +1,118 @@
+{
+  "name": "authentication_failure_in_kafka_cluster_with_sasl_ssl_protocol",
+  "description": "This incident type refers to the failure of authentication in a Kafka cluster that is using the SASL_SSL protocol for authentication. This could be caused by various reasons such as invalid credentials, expired certificates, or configuration issues. As a result, users may not be able to access the Kafka cluster, or may experience delays or errors when attempting to do so. This can have a significant impact on the overall functionality of the software system that relies on the Kafka cluster for data processing and communication.",
+  "params": [
+    {
+      "name": "USERNAME",
+      "value": ""
+    },
+    {
+      "name": "KAFKA_BOOTSTRAP_PORT",
+      "value": ""
+    },
+    {
+      "name": "KAFKA_BOOTSTRAP_SERVER",
+      "value": ""
+    },
+    {
+      "name": "PASSWORD",
+      "value": ""
+    },
+    {
+      "name": "PATH_TO_CA_CERT",
+      "value": ""
+    },
+    {
+      "name": "HOST_NAME",
+      "value": ""
+    },
+    {
+      "name": "K8S_CLUSTER_NAME",
+      "value": ""
+    },
+    {
+      "name": "NAMESPACE",
+      "value": ""
+    }
+  ],
+  "cells": [
+    {
+      "name": "cell_1",
+      "type": "MARKDOWN",
+      "enabled": true,
+      "content": "## Authentication Failure in Kafka Cluster with SASL_SSL protocol.\nThis incident type refers to the failure of authentication in a Kafka cluster that is using the SASL_SSL protocol for authentication. This could be caused by various reasons such as invalid credentials, expired certificates, or configuration issues. As a result, users may not be able to access the Kafka cluster, or may experience delays or errors when attempting to do so. This can have a significant impact on the overall functionality of the software system that relies on the Kafka cluster for data processing and communication."
+    },
+    {
+      "name": "cell_2",
+      "type": "MARKDOWN",
+      "enabled": true,
+      "content": "## Check if Kafka is running"
+    },
+    {
+      "name": "cell_3",
+      "type": "OP_LANG",
+      "enabled": true,
+      "content": "(host | host_name=$HOST_NAME) union (pod | k8s_cluster_name=$K8S_CLUSTER_NAME | namespace=$NAMESPACE) | `systemctl status kafka`"
+    },
+    {
+      "name": "cell_4",
+      "type": "MARKDOWN",
+      "enabled": true,
+      "content": "## Check the Kafka logs for any error messages related to SASL_SSL authentication"
+    },
+    {
+      "name": "cell_5",
+      "type": "OP_LANG",
+      "enabled": true,
+      "content": "(host | host_name=$HOST_NAME) union (pod | k8s_cluster_name=$K8S_CLUSTER_NAME | namespace=$NAMESPACE) | `journalctl -u kafka | grep SASL_SSL`"
+    },
+    {
+      "name": "cell_6",
+      "type": "MARKDOWN",
+      "enabled": true,
+      "content": "## Verify that the correct credentials are being used for authentication"
+    },
+    {
+      "name": "cell_7",
+      "type": "OP_LANG",
+      "enabled": true,
+      "content": "(host | host_name=$HOST_NAME) union (pod | k8s_cluster_name=$K8S_CLUSTER_NAME | namespace=$NAMESPACE) | `kafka-configs.sh --bootstrap-server ${KAFKA_BOOTSTRAP_SERVER} --describe --entity-type users`"
+    },
+    {
+      "name": "cell_8",
+      "type": "MARKDOWN",
+      "enabled": true,
+      "content": "## Check the Kafka server.properties file to ensure that SASL_SSL is enabled and configured correctly"
+    },
+    {
+      "name": "cell_9",
+      "type": "OP_LANG",
+      "enabled": true,
+      "content": "(host | host_name=$HOST_NAME) union (pod | k8s_cluster_name=$K8S_CLUSTER_NAME | namespace=$NAMESPACE) | `cat /etc/kafka/server.properties | grep SASL_SSL`"
+    },
+    {
+      "name": "cell_10",
+      "type": "MARKDOWN",
+      "enabled": true,
+      "content": "## Verify that the correct SSL/TLS certificates are being used for encryption and authentication"
+    },
+    {
+      "name": "cell_11",
+      "type": "OP_LANG",
+      "enabled": true,
+      "content": "(host | host_name=$HOST_NAME) union (pod | k8s_cluster_name=$K8S_CLUSTER_NAME | namespace=$NAMESPACE) | `openssl s_client -connect ${KAFKA_BOOTSTRAP_SERVER}:${KAFKA_BOOTSTRAP_PORT} -tls1_2 -CAfile ${PATH_TO_CA_CERT}`"
+    },
+    {
+      "name": "cell_12",
+      "type": "MARKDOWN",
+      "enabled": true,
+      "content": "## Check the credentials being used for authentication and verify that they are correct."
+    },
+    {
+      "name": "cell_13",
+      "type": "OP_LANG",
+      "enabled": true,
+      "content": "host | host_name=$HOST_NAME | invoke_check_credentials($USERNAME, $PASSWORD)"
+    }
+  ]
+}
